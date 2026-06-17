@@ -6,50 +6,51 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="旅遊記帳">
-<meta name="theme-color" content="#0A0A09">
+<meta name="theme-color" content="#C81F2D">
 <title>日本旅遊記帳</title>
 <link rel="manifest" href="manifest.json">
 <style>
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   :root{
-    --gold:#C9A35E;--gold-light:#3A3020;--gold-dark:#E8C888;
-    --red:#9A2530;--red-light:#3A1518;--red-dark:#D14550;
-    --black:#0D0D0C;--black2:#1A1918;
-    --text:#F0EAE0;--text2:#B8AFA0;--text3:#7A7268;
-    --bg:#0A0A09;--card:rgba(255,255,255,0.05);--border:rgba(201,163,94,0.18);
-    --glass-blur:blur(20px);
+    --gold:#C9A35E;--gold-light:#F5E9D3;--gold-dark:#8A6D2F;
+    --red:#B8202E;--red-light:#FFF0F0;--red-dark:#7A1620;
+    --black:#2A1416;--black2:#3D1A1D;
+    --text:#FFFFFF;--text2:rgba(255,255,255,0.78);--text3:rgba(255,255,255,0.55);
+    --bg:#C81F2D;--card:rgba(255,255,255,0.94);--border:rgba(201,163,94,0.35);
+    --glass-blur:blur(16px);
     --radius:16px;--radius-sm:12px;
+    --ink:#2A1416;--ink2:#6B4548;--ink3:#A8898B;
   }
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto;position:relative;letter-spacing:0.02em}
-  body::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:100vh;background:radial-gradient(circle at 50% 0%, rgba(154,37,48,0.25), transparent 50%), radial-gradient(circle at 80% 100%, rgba(201,163,94,0.12), transparent 50%);z-index:0;pointer-events:none}
+  body::before{content:'';position:fixed;top:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:100vh;background:radial-gradient(circle at 50% 0%, rgba(201,163,94,0.18), transparent 55%), radial-gradient(circle at 100% 100%, rgba(122,22,32,0.35), transparent 50%);z-index:0;pointer-events:none}
   
   /* Header */
   .header{background:linear-gradient(135deg,rgba(154,37,48,0.18),rgba(201,163,94,0.06));backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);padding:52px 20px 16px;border-bottom:0.5px solid var(--border);position:relative;z-index:1}
   .header-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
   .trip-badge{font-size:11px;font-weight:500;color:var(--gold);background:rgba(201,163,94,0.15);padding:3px 10px;border-radius:20px}
-  .header h1{font-size:22px;font-weight:600;color:var(--gold-dark);margin:4px 0 2px}
+  .header h1{font-size:23px;font-weight:600;color:#FFE9B8;margin:4px 0 2px;text-shadow:0 1px 8px rgba(0,0,0,0.15)}
   .header-date{font-size:13px;color:var(--gold)}
   
   /* Budget card */
   .budget-wrap{padding:0 16px}
   .budget-card{background:var(--card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-radius:var(--radius);border:0.5px solid var(--border);padding:16px;margin-top:-12px;position:relative;z-index:1;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
   .budget-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-  .budget-label{font-size:12px;color:var(--text3);margin-bottom:2px}
-  .budget-amount{font-size:28px;font-weight:600;color:var(--text)}
-  .budget-sub{font-size:12px;color:var(--text3)}
+  .budget-label{font-size:12px;color:var(--ink3);margin-bottom:2px}
+  .budget-amount{font-size:28px;font-weight:600;color:var(--ink)}
+  .budget-sub{font-size:12px;color:var(--ink3)}
   .budget-pct{font-size:12px;font-weight:500;padding:4px 10px;border-radius:20px}
   .pct-ok{background:var(--gold-light);color:var(--gold)}
   .pct-warn{background:var(--gold-light);color:var(--gold)}
   .pct-over{background:var(--red-light);color:var(--red)}
   .progress{height:6px;background:var(--gold-light);border-radius:4px;overflow:hidden;margin-bottom:6px}
   .progress-fill{height:100%;background:var(--gold);border-radius:4px;transition:width 0.4s}
-  .progress-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--text3)}
+  .progress-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3)}
   
   /* Stats */
   .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:16px 16px 0}
   .stat{background:var(--card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 8px;text-align:center}
-  .stat-num{font-size:18px;font-weight:600;color:var(--text)}
-  .stat-label{font-size:11px;color:var(--text3);margin-top:2px}
+  .stat-num{font-size:18px;font-weight:600;color:var(--ink)}
+  .stat-label{font-size:11px;color:var(--ink3);margin-top:2px}
 
   /* Scan banner */
   .scan-banner{margin:16px 16px 0;background:linear-gradient(135deg,var(--gold-light),rgba(201,163,94,0.08));border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;border:0.5px solid rgba(201,163,94,0.3);active:opacity:0.85}
@@ -59,7 +60,7 @@
 
   /* Section */
   .section-header{display:flex;justify-content:space-between;align-items:center;padding:16px 16px 8px}
-  .section-title{font-size:14px;font-weight:600;color:var(--text)}
+  .section-title{font-size:14px;font-weight:600;color:var(--ink)}
   .see-all{font-size:12px;color:var(--gold);cursor:pointer}
 
   /* Expense list */
@@ -67,19 +68,19 @@
   .expense-item{background:var(--card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer}
   .exp-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
   .exp-info{flex:1;min-width:0}
-  .exp-name{font-size:14px;font-weight:500;color:var(--text)}
-  .exp-meta{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .exp-name{font-size:14px;font-weight:500;color:var(--ink)}
+  .exp-meta{font-size:11px;color:var(--ink3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .exp-right{text-align:right;flex-shrink:0}
-  .exp-jpy{font-size:15px;font-weight:600;color:var(--text)}
-  .exp-twd{font-size:11px;color:var(--text3)}
-  .empty-state{text-align:center;padding:40px 20px;color:var(--text3)}
+  .exp-jpy{font-size:15px;font-weight:600;color:var(--ink)}
+  .exp-twd{font-size:11px;color:var(--ink3)}
+  .empty-state{text-align:center;padding:40px 20px;color:var(--ink3)}
   .empty-state .emoji{font-size:40px;margin-bottom:12px}
 
   /* Nav */
-  .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(13,13,12,0.85);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-top:0.5px solid var(--border);display:flex;padding:8px 0 20px;z-index:100}
+  .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(122,22,32,0.92);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-top:0.5px solid var(--border);display:flex;padding:8px 0 20px;z-index:100}
   .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0}
   .nav-item .nav-icon{font-size:22px}
-  .nav-item span{font-size:10px;color:var(--text3)}
+  .nav-item span{font-size:10px;color:rgba(255,255,255,0.6)}
   .nav-item.active span{color:var(--gold);font-weight:500}
 
   /* FAB */
@@ -92,21 +93,21 @@
   /* Modal overlay */
   .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;display:flex;align-items:flex-end;justify-content:center}
   .modal-wrap.hidden{display:none}
-  .modal{background:var(--black2);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-top:0.5px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:430px;padding:24px 20px 40px;max-height:90vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,0.5)}
-  .modal-title{font-size:18px;font-weight:600;margin-bottom:20px;text-align:center}
-  .modal label{display:block;font-size:13px;color:var(--text2);margin-bottom:6px;margin-top:14px}
-  .modal input,.modal select,.modal textarea{width:100%;padding:12px 14px;border:0.5px solid var(--border);border-radius:var(--radius-sm);font-size:15px;background:rgba(255,255,255,0.04);color:var(--text);outline:none;font-family:inherit}
+  .modal{background:rgba(255,255,255,0.97);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border-top:2px solid var(--gold);border-radius:24px 24px 0 0;width:100%;max-width:430px;padding:24px 20px 40px;max-height:90vh;overflow-y:auto;box-shadow:0 -8px 40px rgba(0,0,0,0.25)}
+  .modal-title{font-size:18px;font-weight:600;margin-bottom:20px;text-align:center;color:var(--ink)}
+  .modal label{display:block;font-size:13px;color:var(--ink2);margin-bottom:6px;margin-top:14px}
+  .modal input,.modal select,.modal textarea{width:100%;padding:12px 14px;border:1px solid rgba(184,32,46,0.2);border-radius:var(--radius-sm);font-size:15px;background:#FFF8F8;color:var(--ink);outline:none;font-family:inherit}
   .modal input:focus,.modal select:focus{border-color:var(--gold)}
   .modal textarea{height:80px;resize:none}
   .modal-btns{display:flex;gap:10px;margin-top:20px}
   .btn{padding:14px;border-radius:var(--radius-sm);font-size:15px;font-weight:500;cursor:pointer;border:none;flex:1}
   .btn-primary{background:linear-gradient(135deg,var(--gold-dark),var(--gold));color:#1A1611;font-weight:600}
-  .btn-secondary{background:rgba(255,255,255,0.06);color:var(--text)}
+  .btn-secondary{background:#F5EBEB;color:var(--ink)}
 
   /* Category pills */
   .cat-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-  .cat-pill{padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text2)}
-  .cat-pill.selected{background:var(--gold-light);color:var(--gold);border-color:var(--gold)}
+  .cat-pill{padding:7px 14px;border-radius:20px;font-size:13px;cursor:pointer;border:1px solid rgba(184,32,46,0.15);background:#FFF8F8;color:var(--ink2)}
+  .cat-pill.selected{background:var(--gold);color:#fff;border-color:var(--gold-dark)}
 
   /* OCR result */
   .ocr-result{background:var(--gold-light);border-radius:var(--radius-sm);padding:12px;margin-top:12px;font-size:13px;color:var(--gold-dark);line-height:1.6;display:none}
@@ -118,32 +119,32 @@
   .cat-row{display:flex;align-items:center;gap:10px}
   .cat-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
   .cat-bar{height:100%;border-radius:4px;transition:width 0.5s}
-  .cat-row-label{font-size:13px;min-width:60px;color:var(--text2)}
-  .cat-row-amt{font-size:13px;font-weight:500;color:var(--text);min-width:70px;text-align:right}
+  .cat-row-label{font-size:13px;min-width:60px;color:var(--ink2)}
+  .cat-row-amt{font-size:13px;font-weight:500;color:var(--ink);min-width:70px;text-align:right}
   .rate-card{background:var(--card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
   .rate-display{font-size:28px;font-weight:600;color:var(--gold);text-align:center;margin:8px 0 4px}
-  .rate-label{text-align:center;font-size:12px;color:var(--text3)}
+  .rate-label{text-align:center;font-size:12px;color:var(--ink3)}
 
   /* Map page */
   .map-page{padding:16px;padding-bottom:100px}
   #map{height:340px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--gold-light);display:flex;align-items:center;justify-content:center;overflow:hidden}
-  .map-placeholder{text-align:center;color:var(--text3);padding:20px}
+  .map-placeholder{text-align:center;color:var(--ink3);padding:20px}
   .map-placeholder .icon{font-size:40px;margin-bottom:8px}
-  .map-tip{font-size:13px;color:var(--text3);text-align:center;margin-top:8px}
+  .map-tip{font-size:13px;color:var(--ink3);text-align:center;margin-top:8px}
   .location-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
   .loc-item{background:var(--card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px;display:flex;gap:10px;align-items:flex-start}
   .loc-pin{font-size:20px;flex-shrink:0}
-  .loc-name{font-size:14px;font-weight:500;color:var(--text)}
-  .loc-meta{font-size:12px;color:var(--text3);margin-top:2px}
+  .loc-name{font-size:14px;font-weight:500;color:var(--ink)}
+  .loc-meta{font-size:12px;color:var(--ink3);margin-top:2px}
 
   /* Settings */
   .settings-wrap{padding:16px;padding-bottom:100px}
   .setting-card{background:var(--card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
-  .setting-card h3{font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text)}
+  .setting-card h3{font-size:14px;font-weight:600;margin-bottom:12px;color:var(--ink)}
   .setting-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)}
   .setting-row:last-child{border-bottom:none}
-  .setting-label{font-size:14px;color:var(--text)}
-  .setting-val{font-size:13px;color:var(--text3)}
+  .setting-label{font-size:14px;color:var(--ink)}
+  .setting-val{font-size:13px;color:var(--ink3)}
 
   /* Photo upload */
   .photo-upload-area{border:1.5px dashed rgba(201,163,94,0.4);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;background:var(--gold-light);margin-top:6px}
@@ -235,7 +236,7 @@
     </div>
     <div class="section-title" style="margin-bottom:10px">分類佔比</div>
     <div class="cat-breakdown" id="cat-breakdown">
-      <div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">尚無資料</div>
+      <div style="color:var(--ink3);font-size:13px;text-align:center;padding:20px">尚無資料</div>
     </div>
     <div class="section-title" style="margin-top:20px;margin-bottom:10px">每日花費</div>
     <div id="daily-chart" style="display:flex;flex-direction:column;gap:6px"></div>
@@ -252,7 +253,7 @@
     <div id="map">
       <div class="map-placeholder">
         <div class="icon">🗾</div>
-        <p style="font-size:14px;font-weight:500;color:var(--text2)">地圖功能</p>
+        <p style="font-size:14px;font-weight:500;color:var(--ink2)">地圖功能</p>
         <p style="font-size:12px;margin-top:6px">新增花費時輸入地點<br>地圖將自動標記</p>
       </div>
     </div>
@@ -261,7 +262,7 @@
       <span class="section-title">地點清單</span>
     </div>
     <div class="location-list" id="location-list">
-      <div style="text-align:center;color:var(--text3);font-size:13px;padding:20px">尚無地點紀錄</div>
+      <div style="text-align:center;color:var(--ink3);font-size:13px;padding:20px">尚無地點紀錄</div>
     </div>
   </div>
 </div>
@@ -305,7 +306,7 @@
     </div>
     <div class="setting-card">
       <h3>🤖 自動辨識（選用）</h3>
-      <div style="font-size:12px;color:var(--text3);margin-bottom:10px;line-height:1.6">不設定也完全OK，拍照後手動輸入即可。<br>若想啟用AI自動辨識金額，可到 console.anthropic.com 申請 API Key（新帳號有少量試用額度，非長期免費）。</div>
+      <div style="font-size:12px;color:var(--ink3);margin-bottom:10px;line-height:1.6">不設定也完全OK，拍照後手動輸入即可。<br>若想啟用AI自動辨識金額，可到 console.anthropic.com 申請 API Key（新帳號有少量試用額度，非長期免費）。</div>
       <div class="setting-row">
         <span class="setting-label">API Key</span>
         <span class="setting-val"><input type="password" id="s-api-key" placeholder="sk-ant-..." style="width:160px;padding:4px 8px;font-size:12px;border:0.5px solid var(--border);border-radius:6px;background:var(--bg)"></span>
@@ -373,7 +374,7 @@
 <div class="modal-wrap hidden" id="modal-scan">
   <div class="modal">
     <div class="modal-title">📷 拍發票記帳</div>
-    <div style="font-size:13px;color:var(--text3);text-align:center;margin-bottom:14px;line-height:1.6">拍攝或上傳日本發票<br>AI 自動辨識金額並翻譯成繁中</div>
+    <div style="font-size:13px;color:var(--ink3);text-align:center;margin-bottom:14px;line-height:1.6">拍攝或上傳日本發票<br>AI 自動辨識金額並翻譯成繁中</div>
     <label>上傳發票照片</label>
     <div class="photo-upload-area" onclick="document.getElementById('f-photo').click()">
       <div style="font-size:32px">📄</div>
@@ -518,7 +519,7 @@ function renderAnalytics(){
     cats[e.category||'其他'] = (cats[e.category||'其他']||0)+jpy;
     total += jpy;
   });
-  if(!total){S('cat-breakdown').innerHTML='<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">尚無資料</div>';return;}
+  if(!total){S('cat-breakdown').innerHTML='<div style="color:var(--ink3);font-size:13px;text-align:center;padding:20px">尚無資料</div>';return;}
   const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]);
   S('cat-breakdown').innerHTML = sorted.map(([cat,jpy])=>{
     const pct = Math.round(jpy/total*100);
@@ -536,11 +537,11 @@ function renderAnalytics(){
   const maxDay = Math.max(...days.map(d=>d[1]),1);
   S('daily-chart').innerHTML = days.map(([d,twd])=>`
     <div style="display:flex;align-items:center;gap:8px">
-      <span style="font-size:12px;color:var(--text3);min-width:50px">${d.slice(5)}</span>
+      <span style="font-size:12px;color:var(--ink3);min-width:50px">${d.slice(5)}</span>
       <div style="flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
         <div style="width:${Math.round(twd/maxDay*100)}%;height:100%;background:var(--gold);border-radius:4px"></div>
       </div>
-      <span style="font-size:12px;font-weight:500;color:var(--text);min-width:70px;text-align:right">NT$ ${Math.round(twd).toLocaleString()}</span>
+      <span style="font-size:12px;font-weight:500;color:var(--ink);min-width:70px;text-align:right">NT$ ${Math.round(twd).toLocaleString()}</span>
     </div>`).join('');
 }
 
@@ -560,7 +561,7 @@ function renderMap(){
       <div><div class="loc-name">${l.name}</div>
       <div class="loc-meta">${l.count} 筆 · ¥${l.total.toLocaleString()} ≈ NT$ ${Math.round(l.total*s.rate).toLocaleString()}</div></div>
     </div>`).join('') :
-    '<div style="text-align:center;color:var(--text3);font-size:13px;padding:20px">尚無地點紀錄<br>新增花費時填入地點即可</div>';
+    '<div style="text-align:center;color:var(--ink3);font-size:13px;padding:20px">尚無地點紀錄<br>新增花費時填入地點即可</div>';
 }
 
 function showPage(id){

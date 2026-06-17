@@ -4,8 +4,8 @@
   "description": "台灣旅客日本旅遊記帳 App，支援 OCR 發票辨識",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A0A09",
-  "theme_color": "#0A0A09",
+  "background_color": "#C81F2D",
+  "theme_color": "#C81F2D",
   "orientation": "portrait",
   "icons": [
     {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
