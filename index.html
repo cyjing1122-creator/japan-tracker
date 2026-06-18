@@ -66,7 +66,13 @@
 
   /* Expense list */
   .expense-list{padding:0 16px;display:flex;flex-direction:column;gap:8px;padding-bottom:100px}
-  .expense-item{background:var(--card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+  .day-group{margin-bottom:16px}
+  .day-header{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px 8px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.85)}
+  .day-header .day-total{font-size:11px;font-weight:400;color:rgba(255,255,255,0.55)}
+  .day-items{display:flex;flex-direction:column;gap:8px}
+  .day-items{display:flex;flex-direction:column;gap:8px}
+  .expense-item{background:var(--card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:transform 0.1s}
+  .expense-item:active{transform:scale(0.98)}
   .exp-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
   .exp-info{flex:1;min-width:0}
   .exp-name{font-size:14px;font-weight:500;color:var(--ink)}
@@ -371,6 +377,29 @@
   </div>
 </div>
 
+<!-- EDIT EXPENSE MODAL -->
+<div class="modal-wrap hidden" id="modal-edit">
+  <div class="modal">
+    <div class="modal-title">編輯花費</div>
+    <input type="hidden" id="e-id">
+    <label>名稱</label>
+    <input type="text" id="e-name">
+    <label>分類</label>
+    <select id="e-cat" style="width:100%;padding:10px 12px;font-size:15px;border:1px solid rgba(126,21,31,0.15);border-radius:10px;background:#FFF8F8;color:var(--ink)"></select>
+    <label>金額（日圓 ¥）</label>
+    <input type="number" id="e-jpy" oninput="calcEditTWD()">
+    <div style="font-size:12px;color:var(--gold-dark);margin-top:4px" id="edit-twd-preview"></div>
+    <label>地點</label>
+    <input type="text" id="e-location">
+    <label>日期</label>
+    <input type="date" id="e-date">
+    <div class="modal-btns">
+      <button class="btn" style="flex:0.6;background:#F5EBEB;color:var(--red)" onclick="deleteExpense()">🗑 刪除</button>
+      <button class="btn btn-primary" style="flex:1" onclick="saveEditExpense()">儲存 ✓</button>
+    </div>
+  </div>
+</div>
+
 <!-- SCAN MODAL -->
 <div class="modal-wrap hidden" id="modal-scan">
   <div class="modal">
@@ -480,15 +509,45 @@ function renderHome(){
   pctEl.className = 'budget-pct ' + (pct>90?'pct-over':pct>70?'pct-warn':'pct-ok');
   S('stat-count').textContent = expenses.length;
   S('stat-jpy').textContent = '¥' + (totalJPY>=1000?(totalJPY/1000).toFixed(1)+'k':totalJPY);
-  const recent = [...expenses].reverse().slice(0,5);
+  const recent = [...expenses].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
   S('recent-list').innerHTML = recent.length ? recent.map(expHTML).join('') :
     '<div class="empty-state"><div class="emoji">🌸</div><p>還沒有記帳紀錄</p><p style="margin-top:6px;font-size:12px">點右下角 + 新增第一筆</p></div>';
 }
 
 function renderAllExpenses(){
-  const all = [...expenses].reverse();
-  S('all-list').innerHTML = all.length ? all.map(expHTML).join('') :
-    '<div class="empty-state"><div class="emoji">🌸</div><p>尚無花費紀錄</p></div>';
+  if(!expenses.length){
+    S('all-list').innerHTML = '<div class="empty-state"><div class="emoji">🌸</div><p>尚無花費紀錄</p></div>';
+    return;
+  }
+  const s = getSettings();
+  const groups = {};
+  expenses.forEach(e=>{
+    const d = (e.date||'').slice(0,10) || '未知日期';
+    if(!groups[d]) groups[d]=[];
+    groups[d].push(e);
+  });
+  const sortedDates = Object.keys(groups).sort((a,b)=>new Date(b)-new Date(a));
+  S('all-list').innerHTML = sortedDates.map(d=>{
+    const items = groups[d].sort((a,b)=>new Date(b.date)-new Date(a.date));
+    const dayTotal = items.reduce((a,e)=>a+parseFloat(e.jpy||0),0);
+    const dateLabel = formatDateLabel(d);
+    return `<div class="day-group">
+      <div class="day-header"><span>${dateLabel}</span><span class="day-total">¥ ${dayTotal.toLocaleString()} · NT$ ${Math.round(dayTotal*s.rate).toLocaleString()}</span></div>
+      <div class="day-items">${items.map(expHTML).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+function formatDateLabel(dateStr){
+  if(dateStr==='未知日期') return dateStr;
+  const d = new Date(dateStr);
+  const today = new Date();
+  const diffDays = Math.round((today.setHours(0,0,0,0)-new Date(dateStr).setHours(0,0,0,0))/86400000);
+  const weekday = ['週日','週一','週二','週三','週四','週五','週六'][d.getDay()];
+  const md = (d.getMonth()+1)+'月'+d.getDate()+'日';
+  if(diffDays===0) return '今天 · '+md;
+  if(diffDays===1) return '昨天 · '+md;
+  return md+' '+weekday;
 }
 
 function expHTML(e){
@@ -497,11 +556,11 @@ function expHTML(e){
   const bg = CAT_COLORS[e.category]||'#F1EFE8';
   const tc = CAT_TEXT[e.category]||'#5F5E5A';
   const emoji = {餐飲:'🍜',交通:'🚃',購物:'🛍',住宿:'🏨',景點:'🗼',其他:'📦'}[e.category]||'📦';
-  return `<div class="expense-item">
+  return `<div class="expense-item" onclick="openEditModal(${e.id})">
     <div class="exp-icon" style="background:${bg}"><span style="color:${tc}">${emoji}</span></div>
     <div class="exp-info">
       <div class="exp-name">${e.name||'未命名'}</div>
-      <div class="exp-meta">${e.category||'其他'}${e.location?' · '+e.location:''} · ${(e.date||'').slice(5,10)||''}</div>
+      <div class="exp-meta">${e.category||'其他'}${e.location?' · '+e.location:''}</div>
     </div>
     <div class="exp-right">
       <div class="exp-jpy">¥ ${parseFloat(e.jpy||0).toLocaleString()}</div>
@@ -647,6 +706,58 @@ function calcTWD2(){
   const jpy = parseFloat(S('ocr-jpy').value)||0;
   const rate = getSettings().rate;
   S('twd-preview2').textContent = jpy ? '≈ NT$ ' + Math.round(jpy*rate).toLocaleString() : '';
+}
+
+function openEditModal(id){
+  const e = expenses.find(x=>x.id===id);
+  if(!e) return;
+  S('e-id').value = e.id;
+  S('e-name').value = e.name||'';
+  S('e-jpy').value = e.jpy||'';
+  S('e-location').value = e.location||'';
+  S('e-date').value = (e.date||'').slice(0,10);
+  const catOpts = CAT_OPTIONS.map(c=>`<option value="${c}" ${c===e.category?'selected':''}>${CAT_EMOJI[c]} ${c}</option>`).join('');
+  S('e-cat').innerHTML = catOpts;
+  calcEditTWD();
+  S('modal-edit').classList.remove('hidden');
+}
+
+function calcEditTWD(){
+  const jpy = parseFloat(S('e-jpy').value)||0;
+  const rate = getSettings().rate;
+  S('edit-twd-preview').textContent = jpy ? '≈ NT$ ' + Math.round(jpy*rate).toLocaleString() : '';
+}
+
+function saveEditExpense(){
+  const id = parseFloat(S('e-id').value);
+  const idx = expenses.findIndex(x=>x.id===id);
+  if(idx===-1) return;
+  const name = S('e-name').value.trim();
+  const jpy = parseFloat(S('e-jpy').value);
+  if(!name){alert('請輸入名稱');return;}
+  if(!jpy||jpy<=0){alert('請輸入有效金額');return;}
+  const dateVal = S('e-date').value;
+  expenses[idx] = {
+    ...expenses[idx],
+    name, jpy,
+    category: S('e-cat').value,
+    location: S('e-location').value.trim(),
+    date: dateVal ? new Date(dateVal+'T'+(expenses[idx].date?.slice(11)||'12:00:00')).toISOString() : expenses[idx].date
+  };
+  localStorage.setItem('expenses',JSON.stringify(expenses));
+  closeModal('modal-edit');
+  renderHome();
+  if(S('page-expenses').classList.contains('active')) renderAllExpenses();
+}
+
+function deleteExpense(){
+  const id = parseFloat(S('e-id').value);
+  if(!confirm('確定要刪除這筆花費？')) return;
+  expenses = expenses.filter(x=>x.id!==id);
+  localStorage.setItem('expenses',JSON.stringify(expenses));
+  closeModal('modal-edit');
+  renderHome();
+  if(S('page-expenses').classList.contains('active')) renderAllExpenses();
 }
 
 function addExpense(){
